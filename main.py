@@ -7,14 +7,14 @@ WAVE = 'W1'
 PARTICIPANT_TYPE = 'C'
 
 
-def find_Abnormalitites(input_path: str):
+def find_abnormalities(input_path: str, tolerance: int):
     df = pd.read_csv(input_path)
 
     null_indicies = df[df['PIN'].isnull()].index
     df.drop(null_indicies, inplace=True)
 
     counts = df['PIN'].value_counts()
-    abnormalities = counts[counts > 3].index.tolist()
+    abnormalities = counts[counts > tolerance].index.tolist()
 
     if 'PIN' in abnormalities:
         abnormalities.remove('PIN')
@@ -22,7 +22,7 @@ def find_Abnormalitites(input_path: str):
     return abnormalities
 
 
-def to_Final_CSV(input_path: str):
+def to_final_CSV(input_path: str):
     df = pd.read_csv(input_path)
 
     df['Inst'].head()
@@ -111,6 +111,8 @@ def to_Final_CSV(input_path: str):
 
     sortedDf.to_csv(output_path, index=False, lineterminator='\n')
 
+    return output_path
+
 
 def on_wave_select(evt):
     w = evt.widget
@@ -133,7 +135,10 @@ def browse_files():
 
 def prelim_check():
     filename = browse_files()
-    abnormalities = find_Abnormalitites(filename)
+
+    output_text.set('Finding abnormalities...')
+
+    abnormalities = find_abnormalities(filename, 3)
 
     output_text.set(f'There appears to be some abnormalities in rows: {abnormalities}. Please check '
                     f'these rows before reformatting the data.')
@@ -141,9 +146,16 @@ def prelim_check():
 
 def reformat():
     filename = browse_files()
-    to_Final_CSV(filename)
 
-    output_text.set('The file has successfully been reformatted.')
+    output_text.set('Reformatting...')
+
+    filename = to_final_CSV(filename)
+    abnormalities = find_abnormalities(filename, 1)
+
+    output_text.set('The file has successfully been reformatted. \n'
+                    'There appears to be some abnormalities in rows: {abnormalities}. Please check '
+                    f'these rows before reformatting the data.'
+                    )
 
 
 if __name__ == '__main__':
