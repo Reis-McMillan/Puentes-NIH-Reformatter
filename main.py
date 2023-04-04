@@ -164,6 +164,8 @@ def reformat():
 
 if __name__ == '__main__':
     window = Tk()
+    icon = PhotoImage(file='icon.png')
+    window.iconphoto(False, icon)
     window.geometry('500x500')
     window.title('Puentes NIH Data Reformatter')
 
