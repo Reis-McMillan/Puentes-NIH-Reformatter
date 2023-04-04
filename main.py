@@ -85,7 +85,7 @@ def to_final_CSV(input_path: str):
     sortedDf = pd.merge(sortedDf_Dimensional, sortedDf_Flanker, how='outer', on=['PIN'])
     sortedDf = sortedDf.merge(sortedDf_Picvocab, how='outer', on=['PIN'])
 
-    sortedDf.insert(1, 'Wave', 1)
+    sortedDf.insert(1, 'Wave', WAVE)
     sortedDf.insert(2, 'Participant', PARTICIPANT_TYPE)
 
     lang_indices = df['PIN'].drop_duplicates().index
@@ -118,12 +118,16 @@ def to_final_CSV(input_path: str):
 
 
 def on_wave_select(evt):
+    global WAVE
+
     w = evt.widget
     index = int(w.curselection()[0])
     WAVE = w.get(index)
 
 
 def on_participant_select(evt):
+    global PARTICIPANT_TYPE
+
     w = evt.widget
     index = int(w.curselection()[0])
     PARTICIPANT_TYPE = w.get(index)
