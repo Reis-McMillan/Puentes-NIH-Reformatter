@@ -21,6 +21,8 @@ Before the data can be reformatted by the program it is important that the RA ch
 ![](https://github.com/Reis-McMillan/Puentes-NIH-Reformatter/blob/4153215d722a7fcc2e059fd16de750fc0d391eee/README%20photos/prelim_check.png)
 
 ### Reformatting the Data
-Once the RA has checked the abnormalities the program identified in the data and feel that the file is ready to be reformatted, they need only select the button labeled "Reformat NIH Data" and a file explorer will open where the RA can select the file to be reformatted. Once the file has been reformatted, the program will prompt the RA to name and save a new file (the old file will remain as is). Note that it is very important that the RA end the file name with ".csv", the program will not do this for the RA. 
+Once the RA has checked the abnormalities the program identified in the data and feel that the file is ready to be reformatted, they need only select the button labeled "Reformat NIH Data" and a file explorer will open where the RA can select the file to be reformatted. Once the file has been reformatted, the program will prompt the RA to name and save a new file (the old file will remain as is). Note that it is very important that the RA end the file name with ".csv"; the program will not do this for the RA. 
+
+![](https://github.com/Reis-McMillan/Puentes-NIH-Reformatter/blob/cb5809d4749a80e77adae35f79c20c9a4bed2764/README%20photos/reformat.png)
 
 Once the file has been saved, the program will output the PINs of participants where it is unsure that the data has been reformatted correctly. The RA should check these PINs and verify that the data is correct, or make the necessary modifications to ensure that the data is correct.
