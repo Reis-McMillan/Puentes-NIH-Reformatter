@@ -16,20 +16,30 @@ def find_abnormalities(input_path: str):
     counts = df['PIN'].value_counts()
     abnormalities = counts[counts > 3].index.tolist()
 
-    if PARTICIPANT_TYPE == 'C':
-        abnormalities.extend(df['PIN'].str.upper().contains('P').tolist())
-    else:
-        abnormalities.extend(df['PIN'].str.upper().contains('C').tolist())
+    df['PIN'] = df['PIN'].str.upper()
 
-    if WAVE == 'W1':
-        abnormalities.extend(df['PIN'].str.upper().contains('W2').tolist())
-        abnormalities.extend(df['PIN'].str.upper().contains('W3').tolist())
-    elif WAVE == 'W2':
-        abnormalities.extend(df['PIN'].str.upper().contains('W1').tolist())
-        abnormalities.extend(df['PIN'].str.upper().contains('W3').tolist())
+    if PARTICIPANT_TYPE == 'C':
+        abnormalities.extend(df['PIN'][df['PIN'].str.contains('P', na=False)].tolist())
     else:
-        abnormalities.extend(df['PIN'].str.upper().contains('W1').tolist())
-        abnormalities.extend(df['PIN'].str.upper().contains('W2').tolist())
+        abnormalities.extend(df['PIN'][df['PIN'].str.contains('C', na=False)].tolist())
+        abnormalities.extend(df['PIN'][df['PIN'].str.contains('Y', na=False)].tolist())
+
+    print(WAVE)
+    if WAVE == 'W1':
+        print(1)
+        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W2', na=False)].tolist())
+        print(df['PIN'][df['PIN'].str.contains('W2', na=False)].tolist())
+        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W3', na=False)].tolist())
+    elif WAVE == 'W2':
+        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W1', na=False)].tolist())
+        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W3', na=False)].tolist())
+    else:
+        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W1', na=False)].tolist())
+        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W2', na=False)].tolist())
+
+    abnormalities.extend(df['PIN'][~ df['PIN'].str.contains('\d', regex=True, na=False)].tolist())
+
+    abnormalities = [*set(abnormalities)]
 
     if 'PIN' in abnormalities:
         abnormalities.remove('PIN')
