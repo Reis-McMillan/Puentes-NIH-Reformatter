@@ -169,7 +169,10 @@ def prelim_check():
     output_text.set('Finding abnormalities...')
 
     filename = browse_files()
-    abnormalities = find_abnormalities(filename)
+    try:
+        abnormalities = find_abnormalities(filename)
+    except:
+        output_text.set('An error has occurred.')
 
     output_text.set(f'There appears to be some abnormalities in rows: {abnormalities}. Please check '
                     f'these rows before reformatting the data.')
@@ -179,7 +182,10 @@ def reformat():
     output_text.set('Reformatting...')
 
     filename = browse_files()
-    abnormalities = to_final_CSV(filename)
+    try:
+        abnormalities = to_final_CSV(filename)
+    except:
+        output_text.set('An error has occurred.')
 
     output_text.set('The file has successfully been reformatted. \n'
                     f'There appears to be some abnormalities in rows: {abnormalities}. Please check '
