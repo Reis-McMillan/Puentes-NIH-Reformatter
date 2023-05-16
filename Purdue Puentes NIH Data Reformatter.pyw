@@ -54,7 +54,7 @@ def to_final_CSV(input_path: str):
 
     null_indices = df[df['PIN'].isnull() | df['Inst'].isnull()].index
     df.drop(null_indices, inplace=True)
-    label_indices = df[df['PIN'] == 'PIN'].index
+    label_indices = df[df['PIN'] == 'PIN' | df['PIN'].str.contains('9999')].index
     df.drop(label_indices, inplace=True)
 
     df.reset_index(inplace=True, drop=True)
