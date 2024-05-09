@@ -16,31 +16,6 @@ def find_abnormalities(input_path: str):
     counts = df['PIN'].value_counts()
     abnormalities = counts[counts > 3].index.tolist()
 
-    df['PIN'] = df['PIN'].str.upper()
-
-    if PARTICIPANT_TYPE == 'C':
-        abnormalities.extend(df['PIN'][df['PIN'].str.contains('P', na=False)].tolist())
-    else:
-        abnormalities.extend(df['PIN'][df['PIN'].str.contains('C', na=False)].tolist())
-        abnormalities.extend(df['PIN'][df['PIN'].str.contains('Y', na=False)].tolist())
-
-    print(WAVE)
-    if WAVE == 'W1':
-        print(1)
-        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W2', na=False)].tolist())
-        print(df['PIN'][df['PIN'].str.contains('W2', na=False)].tolist())
-        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W3', na=False)].tolist())
-    elif WAVE == 'W2':
-        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W1', na=False)].tolist())
-        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W3', na=False)].tolist())
-    else:
-        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W1', na=False)].tolist())
-        abnormalities.extend(df['PIN'][df['PIN'].str.contains('W2', na=False)].tolist())
-
-    abnormalities.extend(df['PIN'][~ df['PIN'].str.contains('\d', regex=True, na=False)].tolist())
-
-    abnormalities = [*set(abnormalities)]
-
     if 'PIN' in abnormalities:
         abnormalities.remove('PIN')
 
@@ -52,10 +27,11 @@ def to_final_CSV(input_path: str):
 
     df['Inst'].head()
 
-    null_indices = df[df['PIN'].isnull() | df['Inst'].isnull()].index
+    null_indices = df[df['PIN'].isnull()].index
     df.drop(null_indices, inplace=True)
-    label_indices = df[df['PIN'] == 'PIN' | df['PIN'].str.contains('9999')].index
+    label_indices = df[df['PIN'] == 'PIN'].index
     df.drop(label_indices, inplace=True)
+    df.fillna('', inplace=True)
 
     df.reset_index(inplace=True, drop=True)
 
@@ -169,10 +145,7 @@ def prelim_check():
     output_text.set('Finding abnormalities...')
 
     filename = browse_files()
-    try:
-        abnormalities = find_abnormalities(filename)
-    except:
-        output_text.set('An error has occurred.')
+    abnormalities = find_abnormalities(filename)
 
     output_text.set(f'There appears to be some abnormalities in rows: {abnormalities}. Please check '
                     f'these rows before reformatting the data.')
@@ -182,10 +155,7 @@ def reformat():
     output_text.set('Reformatting...')
 
     filename = browse_files()
-    try:
-        abnormalities = to_final_CSV(filename)
-    except:
-        output_text.set('An error has occurred.')
+    abnormalities = to_final_CSV(filename)
 
     output_text.set('The file has successfully been reformatted. \n'
                     f'There appears to be some abnormalities in rows: {abnormalities}. Please check '
